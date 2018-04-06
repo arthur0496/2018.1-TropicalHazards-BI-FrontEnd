@@ -1,5 +1,4 @@
 <template>
- 
 <div class="container">
      <div class="section">
        <div class="row">
@@ -37,7 +36,6 @@
 </template>
 
 <script>
-
 
 </script>
 

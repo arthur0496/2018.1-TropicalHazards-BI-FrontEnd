@@ -10,7 +10,6 @@
 
 <script>
 
-
 </script>
 
 <style>
@@ -23,6 +22,5 @@
   text-align: center;
   font-size: 20px;
 }
-
 
 </style>
