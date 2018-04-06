@@ -2,11 +2,9 @@
 
  <div id="app">
 
-
       <div id="banner">
         <banner></banner>
-        
-      </div>   
+      </div>
        <router-view />
 
       <div id="cardsContent">
@@ -16,7 +14,6 @@
       <div id="LocationMap">
         <LocationMap></LocationMap>
       </div>
-
 
   </div>
 </template>
@@ -28,16 +25,15 @@ import LocationMap from '@/components/Utils/LocationMap'
 export default {
   name: 'Homepage',
   components: {
-    
+
     Banner,
     CardsContent,
     LocationMap
-    
+
   }
 }
 
 </script>
-
 
 <style>
 
