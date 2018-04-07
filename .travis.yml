@@ -19,8 +19,8 @@ before_script:
   - docker-compose -f docker-compose.test.yml up -d
 
 script:
-  - "./node_modules/coveralls/bin/coveralls.js < ./test/unit/coverage/lcov.info"
   - docker exec -it tropical-hazards-front npm test
 
 after_script:
+  - "./node_modules/coveralls/bin/coveralls.js < ./test/unit/coverage/lcov.info"
   - docker-compose down --remove-orphans
