@@ -1,0 +1,9 @@
+FROM node:slim
+
+RUN apt-get update
+
+WORKDIR /TropicalHazards-BI-FrontEnd
+
+COPY . /TropicalHazards-BI-FrontEnd
+
+COPY package.json /package.json
