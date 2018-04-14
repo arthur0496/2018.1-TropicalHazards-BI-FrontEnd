@@ -19,14 +19,14 @@ after_script:
 - "./node_modules/coveralls/bin/coveralls.js < ./test/unit/coverage/lcov.info"
 - docker-compose down --remove-orphans
 after_success:
-- docker login --username=_ --passwword=$(HEROKU_AUTHTAG) registry.heroku.com
-- docker build -f Dockerfile.prod -t deploy_image
+- docker login --username=_ --password=$(HEROKU_AUTHTAG) registry.heroku.com
+- docker build -f Dockerfile.prod -t deploy_image .
 - |
-  if[ "${TRAVIS_BRANCH}" == "development"]; them 
+  if[ "${TRAVIS_BRANCH}" == "development"]; then 
     echo "Deploying to homolog environment..."  
     docker tag deploy_image registry.heroku.com/tropical-hazards-homolog/web
     docker push registry.heroku.com/tropical-hazards-homolog/web
-  else if[ "${TRAVIS_BRANCH}" == "master"]; them
+  else if[ "${TRAVIS_BRANCH}" == "master"]; then
     echo "Deploying to production environment..."
     docker tag deploy_image registry.heroku.com/tropical-hazards/web
     docker push registry.heroku.com/tropical-hazards/web
