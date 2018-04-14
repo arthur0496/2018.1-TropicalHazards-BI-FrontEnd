@@ -7,9 +7,11 @@ node_js:
 - 9.11.1
 env:
   global:
-  - secure: fjUg+ke1dH2GFqHNX4rez5OGISQMe+b81xyz0SmRqwGPwDklZX4nnJDbgZne34f9HTDTDSJ7aocrhz2pdYH7/mRaZNdwm+qsGjf1InJDIlIHlKJafJCLzIkqeQRr1JxAft4gBpJiLOMAGSiBCrYo8M1Efxd81m4PUSk8vsvKqglnGAZkQvz/HX6xIaTLJiOYmPhLNRut7HibN457dwkXUNnSn+6+nzmk+dIrzqb7/687rueMMgjiGEt8Id3kLRjIcZOkwBGcjOUDdqJDabNq8F5f2uOkx3z9QuHe+WzQ8J0/qY0On195OzbdjapJcM0tIDJvtQFn1Vvt34NfaBG5kaZKjVAVTwivVMxhoTWBOwBax3tAsj+M9Gy0VswIyLOr82L0aGKV9pcApBnXDeO0xosudMfKpzHoMc4wKhuJNIaT0CVpGz5YAOKf9cOiomDj1WaYb2ERd3Fhv+WtuNwAeEp1XtXNevG4ZkFnQEv7mLtE2QzhBiyOKDjy3Y28OUhp4bAgwkBR+AZcQaLqMjdJJBDB9tpkr8XuNkYXyHEeqcIsR5yGOBLawIvSss11t0uCwOtCahmcFIDLrse9LmhnQ6zcP2cYK4f86c9QHFyianyyTyFy7s0zRVxcm/bx86MeEarfcV6zV1ILcGtzhnefX3K1lcQS9D1D0ta/oMYUZDQ=
-
   - CC_TEST_REPORTER_ID=f9a7cc51d41f847d9b5c91f469606222755355ec9ea001c6bd7a16d20f45941f
+deploy:
+  provider: heroku 
+  api_key:
+    - secure: fjUg+ke1dH2GFqHNX4rez5OGISQMe+b81xyz0SmRqwGPwDklZX4nnJDbgZne34f9HTDTDSJ7aocrhz2pdYH7/mRaZNdwm+qsGjf1InJDIlIHlKJafJCLzIkqeQRr1JxAft4gBpJiLOMAGSiBCrYo8M1Efxd81m4PUSk8vsvKqglnGAZkQvz/HX6xIaTLJiOYmPhLNRut7HibN457dwkXUNnSn+6+nzmk+dIrzqb7/687rueMMgjiGEt8Id3kLRjIcZOkwBGcjOUDdqJDabNq8F5f2uOkx3z9QuHe+WzQ8J0/qY0On195OzbdjapJcM0tIDJvtQFn1Vvt34NfaBG5kaZKjVAVTwivVMxhoTWBOwBax3tAsj+M9Gy0VswIyLOr82L0aGKV9pcApBnXDeO0xosudMfKpzHoMc4wKhuJNIaT0CVpGz5YAOKf9cOiomDj1WaYb2ERd3Fhv+WtuNwAeEp1XtXNevG4ZkFnQEv7mLtE2QzhBiyOKDjy3Y28OUhp4bAgwkBR+AZcQaLqMjdJJBDB9tpkr8XuNkYXyHEeqcIsR5yGOBLawIvSss11t0uCwOtCahmcFIDLrse9LmhnQ6zcP2cYK4f86c9QHFyianyyTyFy7s0zRVxcm/bx86MeEarfcV6zV1ILcGtzhnefX3K1lcQS9D1D0ta/oMYUZDQ=
 before_script:
 - npm install coveralls
 - docker-compose -f docker-compose.test.yml up -d
@@ -19,19 +21,15 @@ after_script:
 - "./node_modules/coveralls/bin/coveralls.js < ./test/unit/coverage/lcov.info"
 - docker-compose down --remove-orphans
 after_success:
-- echo "$(HEROKU_TOKEN)"
-- docker login --username=_ --password="$(HEROKU_TOKEN)" registry.heroku.com
+- echo "$(api_key)"
+- docker login --username=_ --password="$(api_key)" registry.heroku.com
 - docker build -f Dockerfile.prod -t deploy_image .
-- |
-  if[ "${TRAVIS_BRANCH}" == "development"]; then 
-    echo "Deploying to homolog environment..."  
-    docker tag deploy_image registry.heroku.com/tropical-hazards-homolog/web
-    docker push registry.heroku.com/tropical-hazards-homolog/web
-  else if[ "${TRAVIS_BRANCH}" == "master"]; then
-    echo "Deploying to production environment..."
-    docker tag deploy_image registry.heroku.com/tropical-hazards/web
-    docker push registry.heroku.com/tropical-hazards/web
-  else
-    echo "Skipping deploy...";
-  fi;
-  fi;
+- "if[ \"${TRAVIS_BRANCH}\" == \"development\"]; then \n  echo \"Deploying to homolog
+  environment...\"  \n  docker tag deploy_image registry.heroku.com/tropical-hazards-homolog/web\n
+  \ docker push registry.heroku.com/tropical-hazards-homolog/web\nelse if[ \"${TRAVIS_BRANCH}\"
+  == \"master\"]; then\n  echo \"Deploying to production environment...\"\n  docker
+  tag deploy_image registry.heroku.com/tropical-hazards/web\n  docker push registry.heroku.com/tropical-hazards/web\nelse\n
+  \ echo \"Skipping deploy...\";\nfi;\nfi;\n"
+deploy:
+  api_key:
+    secure: X6/12HqoN3X6kdWqB8CsDW4H9U3fnzg+WO8N7hNTPOtRju0RKnkZwk8Y9kj5oS98E8cMRLDl4QWKWG1QOq4tvcwEMZFGVNNOL7B7pKtQj9ML9Mgx4Zk9W9KLbVSB7HLWYvVmI7imb4fVDxUFSqOH5MNDDfmIBX+tqgrOfH7ywCY97OCo/fZtvzJdXmk3HLeKqEq1gZGPj1FKeXRcXxSivGQEz+ry/CXrOP9vRQIAKSxtufC5NhTmF2GEJ6yOnNfr1sgQhEqX6ch9xjqpRfjkVP2yZkh+xwdZWAzs6ASWCV79OSRZg/ZPqyYPJcOivt0KuRcG4shHXHgJpAasC0zrYE+o4zg9UHhBx+wDFJNYc5kBtFj90wQnRkMMl9PJ6gUVrYAyiPLJ1JYXSL3FMkWmaU//Q+/4qDE/ScyWXyIUQbgPA+tMSUMLN9wIZ0+R7M6sRLrMAJFNmrjj9l88m6pTx4Yq2tA48Ct2RQgSygDN8g3Y52QShZ0P4Z1wuNjrtQ1g6xpo0X4vkdauMMtdDbuEErfDYi9YsUU4IBCycHGM8uEqp3ILoZUt1sTKwLjxJXx5HHI8HCGLcZwQCBrItfNjyIc/DI/9mhTPnY7/zLbjjCGU8oxvkrcudSug3kQ1scSWlq88LFgldlq4JpWH7JqpRZRsPRNXWo+gvrkSGAgz2HY=
