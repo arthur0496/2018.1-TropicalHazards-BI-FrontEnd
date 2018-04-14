@@ -7,9 +7,9 @@ node_js:
 - 9.11.1
 env:
   global:
+  - secure: fjUg+ke1dH2GFqHNX4rez5OGISQMe+b81xyz0SmRqwGPwDklZX4nnJDbgZne34f9HTDTDSJ7aocrhz2pdYH7/mRaZNdwm+qsGjf1InJDIlIHlKJafJCLzIkqeQRr1JxAft4gBpJiLOMAGSiBCrYo8M1Efxd81m4PUSk8vsvKqglnGAZkQvz/HX6xIaTLJiOYmPhLNRut7HibN457dwkXUNnSn+6+nzmk+dIrzqb7/687rueMMgjiGEt8Id3kLRjIcZOkwBGcjOUDdqJDabNq8F5f2uOkx3z9QuHe+WzQ8J0/qY0On195OzbdjapJcM0tIDJvtQFn1Vvt34NfaBG5kaZKjVAVTwivVMxhoTWBOwBax3tAsj+M9Gy0VswIyLOr82L0aGKV9pcApBnXDeO0xosudMfKpzHoMc4wKhuJNIaT0CVpGz5YAOKf9cOiomDj1WaYb2ERd3Fhv+WtuNwAeEp1XtXNevG4ZkFnQEv7mLtE2QzhBiyOKDjy3Y28OUhp4bAgwkBR+AZcQaLqMjdJJBDB9tpkr8XuNkYXyHEeqcIsR5yGOBLawIvSss11t0uCwOtCahmcFIDLrse9LmhnQ6zcP2cYK4f86c9QHFyianyyTyFy7s0zRVxcm/bx86MeEarfcV6zV1ILcGtzhnefX3K1lcQS9D1D0ta/oMYUZDQ=
+
   - CC_TEST_REPORTER_ID=f9a7cc51d41f847d9b5c91f469606222755355ec9ea001c6bd7a16d20f45941f
-  matrix:
-    secure: UGLKVBQBXjxAgL5Oll728ajVCsQFgag/NG5+yKb820PyaZSIi4tmdxWAKCAfey48qNDIPCup0VE4Htgecrez1/JiFacvYBiygM+0hibYUqdr47GJlw4ZoTl7ww93i7thJSB/lj42F85yn7C52d71CWTZC6qE9O3w6OXZIK20WrUl1Q43r2HitXwWJjjsfNtjq/cZ5+/uWLbhYV+bQ/DBKuFvwLduhCmm4AZZIOkxeocwFtif76dHG5r0fWMt1hBDanabhLy/p5gGHN5q8nAnPhHzxP2fqMm0quqHr+UVlwRH3/vQidL+SAequ7xBS8yTR3wvh10Y67T95Kuzzapt4/7dy4fe7FBpQQA6/xo92uHUdXQ2UruHUmSfkiFsBrwyF4FGH2n4SaZ25EQUqj16A2HEpFMphsH9Dbmw//uJDsiQiDy+oXsu/DZ/iA49JzXATEl0BLmQC9i7AiNLNhwcdzvMn/a5EtdpJvEy4iUk+pgeTIUKIQWW6hK+vxPJWZcduB1eMdbvjKABu5xKBpcTXZqjvcJCDdb6fHN4PGM3ppiq5msfFBmEEwGvLgK8Ra/p3VyOdM6mhhYdKB3BEtQUgnzwv33SxtSgOVMOQMHrVpcQtP2oo2WC25yfDyAjOEQQMUjoAKVyp33PoX/7z6BimwlAN5g8WidvvxLqVybwLfQ=
 before_script:
 - npm install coveralls
 - docker-compose -f docker-compose.test.yml up -d
@@ -19,8 +19,8 @@ after_script:
 - "./node_modules/coveralls/bin/coveralls.js < ./test/unit/coverage/lcov.info"
 - docker-compose down --remove-orphans
 after_success:
-- echo "$(HEROKU_AUTHTAG)"
-- docker login --username=_ --password="$(HEROKU_AUTHTAG)" registry.heroku.com
+- echo "$(HEROKU_TOKEN)"
+- docker login --username=_ --password="$(HEROKU_TOKEN)" registry.heroku.com
 - docker build -f Dockerfile.prod -t deploy_image .
 - |
   if[ "${TRAVIS_BRANCH}" == "development"]; then 
